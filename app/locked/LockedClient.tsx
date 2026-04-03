@@ -28,7 +28,7 @@ export default function LockedClient({ profile }: { profile: Profile }) {
           min-height: 100dvh;
           background: #08080f;
           color: #e8e6ff;
-          font-family: system-ui, -apple-system, sans-serif;
+          font-family: var(--font-geist-sans), system-ui, sans-serif;
           display: flex;
           flex-direction: column;
           align-items: center;

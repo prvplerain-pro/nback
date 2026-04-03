@@ -15,7 +15,7 @@ export default function VyzkumPage() {
 
       <div
         style={{
-          fontFamily: 'system-ui,-apple-system,sans-serif',
+          fontFamily: 'var(--font-geist-sans), system-ui, sans-serif',
           background: '#08080f',
           color: '#e8e6ff',
           minHeight: '100vh',

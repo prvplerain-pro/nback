@@ -11,7 +11,7 @@ export default function CenyPage() {
         .btn-secondary:hover{color:#e8e6ff;border-color:rgba(130,110,255,0.5);}
       `}} />
 
-      <div style={{fontFamily:'system-ui,-apple-system,sans-serif', background:'#08080f', color:'#e8e6ff', minHeight:'100vh', padding:'48px 24px'}}>
+      <div style={{fontFamily:'var(--font-geist-sans), system-ui, sans-serif', background:'#08080f', color:'#e8e6ff', minHeight:'100vh', padding:'48px 24px'}}>
         <div style={{maxWidth:'780px', margin:'0 auto'}}>
 
           {/* Back */}

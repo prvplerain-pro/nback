@@ -53,7 +53,7 @@ export default function Onboarding() {
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       padding: '32px 24px',
-      fontFamily: 'system-ui,-apple-system,sans-serif',
+      fontFamily: 'var(--font-geist-sans), system-ui, sans-serif',
     }}>
 
       {/* Progress dots */}

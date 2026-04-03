@@ -12,7 +12,7 @@ export default function HomePage() {
           --text:#e8e6ff;--text2:#8a82c0;--text3:#3d3860;
           --border:rgba(130,110,255,0.12);--border2:rgba(130,110,255,0.25);
         }
-        body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+        body{font-family:var(--font-geist-sans),system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
         .page-nav{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:0.5px solid var(--border);background:rgba(8,8,15,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
         .nav-logo{font-size:14px;font-weight:500;color:var(--purple2);letter-spacing:.06em}
         .nav-links{display:flex;gap:20px}

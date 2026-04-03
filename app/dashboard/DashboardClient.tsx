@@ -132,7 +132,7 @@ export default function DashboardClient({
     <>
       <Onboarding />
       <style>{`
-        .li-app { position:relative; height:100dvh; overflow:hidden; background:#08080f; color:#e8e6ff; font-family:system-ui,-apple-system,sans-serif; font-size:14px; }
+        .li-app { position:relative; height:100dvh; overflow:hidden; background:#08080f; color:#e8e6ff; font-family:var(--font-geist-sans),system-ui,sans-serif; font-size:14px; }
         .li-page { position:absolute; inset:0; will-change:transform,opacity; transition:transform .5s cubic-bezier(.4,0,.2,1),opacity .5s cubic-bezier(.4,0,.2,1); }
         .li-start { transform:translateY(0) scale(1); opacity:1; display:flex; flex-direction:column; height:100%; min-height:0; }
         .li-start.out { transform:translateY(-60px) scale(0.93); opacity:0; pointer-events:none; }
