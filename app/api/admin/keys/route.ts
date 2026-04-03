@@ -31,19 +31,19 @@ export async function POST(req: NextRequest) {
   )
 
   // Get current keys
-  const { data: profile } = await db
+  const { data: targetProfile } = await db
     .from('profiles')
     .select('keys')
     .eq('id', userId)
     .single()
 
-  if (!profile) return NextResponse.json({ error: 'User not found' }, { status: 404 })
+  if (!targetProfile) return NextResponse.json({ error: 'User not found' }, { status: 404 })
 
   let newKeys: number
   if (reset) {
     newKeys = 3
   } else {
-    newKeys = Math.min(3, Math.max(0, profile.keys + (delta ?? 0)))
+    newKeys = Math.min(3, Math.max(0, targetProfile.keys + (delta ?? 0)))
   }
 
   await db.from('profiles').update({ keys: newKeys }).eq('id', userId)
