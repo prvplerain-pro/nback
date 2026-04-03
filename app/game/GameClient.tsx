@@ -1,8 +1,8 @@
 'use client'
-import { useReducer, useEffect, useRef, useCallback, useState } from 'react'
+import { useReducer, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { GameTrial, GamePhase } from '@/types'
-import { generateTrials, getMatches, calculateScoreBreakdown, speakLetter, getAvailableVoices, nextNLevel, warmUpTTS } from '@/lib/game'
+import { generateTrials, getMatches, calculateScoreBreakdown, speakLetter, preloadAudio } from '@/lib/game'
 
 function vibrate() {
   if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -145,20 +145,9 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
   const router  = useRouter()
   const [state, dispatch] = useReducer(reducer, INIT)
 
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
-  const [selectedVoiceName, setSelectedVoiceName] = useState('')
-  const voiceNameRef = useRef<string | undefined>(undefined)
-
   useEffect(() => {
-    getAvailableVoices().then(v => {
-      setVoices(v)
-      if (v.length) setSelectedVoiceName(prev => prev || v[0].name)
-    })
+    preloadAudio()
   }, [])
-
-  useEffect(() => {
-    voiceNameRef.current = selectedVoiceName || undefined
-  }, [selectedVoiceName])
 
   const stateRef = useRef(state)
   stateRef.current = state
@@ -189,7 +178,7 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
 
     clearAllTimers()
 
-    speakLetter(trial.letter, voiceNameRef.current)
+    speakLetter(trial.letter)
 
     const t1 = setTimeout(() => {
       dispatch({ type: 'SHOW_RESPONSE' })
@@ -295,24 +284,10 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
           </div>
         </div>
 
-        {/* Voice selector */}
-        <div style={{ width: '100%', maxWidth: '240px' }}>
-          <div style={{ fontSize: '11px', color: 'var(--text3)', marginBottom: '6px', letterSpacing: '.05em', textTransform: 'uppercase' }}>hlas</div>
-          <select
-            value={selectedVoiceName}
-            onChange={e => setSelectedVoiceName(e.target.value)}
-            style={{ width: '100%', background: 'var(--bg2)', border: '0.5px solid var(--border)', borderRadius: '8px', padding: '8px 12px', color: 'var(--text2)', fontSize: '13px', outline: 'none' }}>
-            {voices.map(v => (
-              <option key={`${v.name}-${v.lang}`} value={v.name}>{v.name}</option>
-            ))}
-          </select>
-        </div>
-
         {/* Start button */}
         <button
           type="button"
           onPointerDown={() => {
-            warmUpTTS()
             dispatch({ type: 'START', nLevel: initialNLevel })
           }}
           style={{ background: 'var(--purple)', color: '#fff', border: 'none', padding: '13px 40px', borderRadius: '10px', fontSize: '14px', fontWeight: 500, cursor: 'pointer', transition: 'all .2s', touchAction: 'manipulation' }}
@@ -402,7 +377,6 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
               <button
                 type="button"
                 onPointerDown={() => {
-                  warmUpTTS()
                   dispatch({ type: 'START', nLevel: state.suggestedN ?? state.nLevel })
                 }}
                 className="px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105"

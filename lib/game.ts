@@ -82,45 +82,24 @@ export function nextNLevel(currentN: number, scorePercent: number): number {
   return currentN // 70–89 = stagnation
 }
 
-// ── Web Speech API ─────────────────────────────────────────
-let ttsReady = false
+// ── Letter audio (public/audio/*.mp3) ───────────────────────
+const audioCache: Record<string, HTMLAudioElement> = {}
 
-/** Call from a user gesture (e.g. Start) so iOS Safari allows speech during the game loop. */
-export function warmUpTTS() {
-  if (ttsReady || typeof window === 'undefined') return
-  const u = new SpeechSynthesisUtterance('')
-  u.volume = 0
-  window.speechSynthesis.speak(u)
-  ttsReady = true
-}
-
-export function getAvailableVoices(): Promise<SpeechSynthesisVoice[]> {
-  if (typeof window === 'undefined') {
-    return Promise.resolve([])
-  }
-  return new Promise(resolve => {
-    const voices = window.speechSynthesis.getVoices()
-    if (voices.length) {
-      resolve(voices)
-      return
-    }
-    window.speechSynthesis.onvoiceschanged = () => {
-      resolve(window.speechSynthesis.getVoices())
-    }
-  })
-}
-
-export function speakLetter(letter: string, voiceName?: string) {
+export function speakLetter(letter: string) {
   if (typeof window === 'undefined') return
-  window.speechSynthesis.cancel()
-  const u = new SpeechSynthesisUtterance(letter)
-  u.rate  = 0.9
-  u.pitch = 1
-  if (voiceName) {
-    const voice = window.speechSynthesis.getVoices().find(v => v.name === voiceName)
-    if (voice) u.voice = voice
+  if (!audioCache[letter]) {
+    audioCache[letter] = new Audio(`/audio/${letter}.mp3`)
   }
-  window.speechSynthesis.speak(u)
+  const audio = audioCache[letter]
+  audio.currentTime = 0
+  audio.play().catch(() => {})
+}
+
+export function preloadAudio() {
+  const letters = ['C', 'H', 'K', 'L', 'Q', 'R', 'S', 'T']
+  letters.forEach(l => {
+    audioCache[l] = new Audio(`/audio/${l}.mp3`)
+  })
 }
 
 function randomFrom<T>(arr: T[]): T {
