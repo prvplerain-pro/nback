@@ -13,63 +13,83 @@ export default function HomePage() {
           --border:rgba(130,110,255,0.12);--border2:rgba(130,110,255,0.25);
         }
         body{font-family:var(--font-geist-sans),system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
-        .page-nav{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:0.5px solid var(--border);background:rgba(8,8,15,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-        .nav-logo{font-size:14px;font-weight:500;color:var(--purple2);letter-spacing:.06em}
-        .nav-links{display:flex;gap:20px}
         .nav-link{font-size:13px;color:var(--text2);cursor:pointer;transition:color .2s;text-decoration:none}
         .nav-link:hover{color:var(--text)}
-        .nav-actions{display:flex;align-items:center;gap:16px;flex-shrink:0}
-        .nav-cta{background:var(--purple);color:#fff;border:none;padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;transition:opacity .2s;text-decoration:none;display:inline-block}
+        .nav-cta{background:var(--purple);color:#fff;border:none;padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;transition:opacity .2s;text-decoration:none;display:inline-block;flex-shrink:0}
         .nav-cta:hover{opacity:.85}
-        .hero{padding:60px 24px 48px;text-align:center}
+        .nav-links-desktop{display:flex;gap:20px}
+        @media (max-width:600px){.nav-links-desktop{display:none}}
+        .hero{text-align:center}
         .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(108,92,231,.1);border:0.5px solid rgba(108,92,231,.3);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--purple2);margin-bottom:24px;letter-spacing:.05em}
         .hero-dot{width:6px;height:6px;border-radius:50%;background:var(--purple);animation:pulse 2s infinite}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-        .hero h1{font-size:38px;font-weight:500;line-height:1.15;margin-bottom:16px;color:var(--text)}
+        .hero h1{font-size:clamp(24px,7vw,38px);font-weight:500;line-height:1.15;margin-bottom:16px;color:var(--text)}
         .hero h1 span{color:var(--purple2)}
-        .hero-sub{font-size:15px;color:var(--text2);max-width:400px;margin:0 auto 32px;line-height:1.6}
-        .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-        .btn-primary{background:var(--purple);color:#fff;border:none;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+        .hero-sub{font-size:clamp(13px,3.5vw,15px);color:var(--text2);max-width:400px;margin:0 auto 32px;line-height:1.6;padding:0 8px}
+        .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;flex-direction:column;align-items:center}
+        @media (min-width:480px){.hero-btns{flex-direction:row;justify-content:center}}
+        .btn-primary{background:var(--purple);color:#fff;border:none;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;width:100%;max-width:280px;text-align:center}
         .btn-primary:hover{background:#7d6ef0;transform:translateY(-1px)}
-        .btn-secondary{background:transparent;color:var(--text2);border:0.5px solid var(--border2);padding:12px 24px;border-radius:10px;font-size:14px;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+        .btn-secondary{background:transparent;color:var(--text2);border:0.5px solid var(--border2);padding:12px 24px;border-radius:10px;font-size:14px;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;width:100%;max-width:280px;text-align:center}
         .btn-secondary:hover{color:var(--text);border-color:rgba(130,110,255,.4)}
-        .hero-visual{margin:40px auto 0;max-width:320px;background:var(--bg2);border:0.5px solid var(--border);border-radius:16px;padding:20px}
+        @media (min-width:480px){.btn-primary,.btn-secondary{width:auto}}
         .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:160px;margin:0 auto 16px}
         .mc{aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,.04);border:0.5px solid var(--border);transition:all .4s}
         .mc.lit{background:var(--purple);border-color:#8b7fff}
         .mc.fading{background:rgba(108,92,231,.3);border-color:rgba(139,127,255,.4)}
-        .mini-stats{display:flex;justify-content:center;gap:20px}
         .ms{text-align:center}
         .ms-val{font-size:18px;font-weight:500;color:var(--purple2)}
         .ms-lbl{font-size:11px;color:var(--text3);margin-top:2px}
-        .features{padding:40px 24px}
-        .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;max-width:700px;margin:0 auto}
+        .feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:700px;margin:0 auto}
+        @media (max-width:480px){.feat-grid{grid-template-columns:1fr}}
         .feat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:18px 16px;transition:border-color .2s}
         .feat-card:hover{border-color:var(--border2)}
         .feat-icon{width:32px;height:32px;border-radius:8px;background:rgba(108,92,231,.15);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
         .feat-icon svg{width:16px;height:16px;stroke:var(--purple2);fill:none;stroke-width:1.5}
         .feat-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
         .feat-desc{font-size:12px;color:var(--text2);line-height:1.5}
-        .social-proof{padding:32px 24px;border-top:0.5px solid var(--border)}
+        .social-proof{border-top:0.5px solid var(--border)}
         .sp-inner{max-width:600px;margin:0 auto}
         .sp-label{font-size:11px;color:var(--text3);letter-spacing:.08em;text-align:center;margin-bottom:16px;text-transform:uppercase}
-        .sp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+        .sp-grid{display:grid;grid-template-columns:1fr;gap:10px}
+        @media (min-width:600px){.sp-grid{grid-template-columns:repeat(3,1fr)}}
         .sp-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px}
         .sp-quote{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
         .sp-name{font-size:11px;color:var(--text3)}
+        .page-nav{padding:12px 16px}
+        @media (min-width:601px){.page-nav{padding:14px 20px}}
+        .hero{padding:40px 16px 36px}
+        @media (min-width:601px){.hero{padding:60px 24px 48px}}
+        .features{padding:32px 16px}
+        @media (min-width:601px){.features{padding:40px 24px}}
+        .social-proof{padding:24px 16px}
+        @media (min-width:601px){.social-proof{padding:32px 24px}}
       `}</style>
 
-      <nav className="page-nav">
-        <div className="nav-logo">lock-i<span style={{textTransform:'uppercase'}}>n</span></div>
-        <div className="nav-links">
+      <nav
+        className="page-nav"
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          borderBottom: '0.5px solid rgba(130,110,255,0.12)',
+          background: '#08080f',
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+        }}
+      >
+        <div style={{ fontSize: '14px', fontWeight: 500, color: '#a89aff', letterSpacing: '.06em' }}>
+          lock-i<span style={{ textTransform: 'uppercase' }}>N</span>
+        </div>
+
+        <div className="nav-links-desktop">
           <a className="nav-link" href="#jak">jak to funguje</a>
           <a className="nav-link" href="/vyzkum">výzkum</a>
           <a className="nav-link" href="/ceny">ceny</a>
         </div>
-        <div className="nav-actions">
-          <Link href="/login" className="nav-link">přihlásit se</Link>
-          <Link href="/register" className="nav-cta">začít zdarma</Link>
-        </div>
+
+        <a href="/register" className="nav-cta">začít zdarma</a>
       </nav>
 
       <section className="hero">
@@ -80,9 +100,26 @@ export default function HomePage() {
           <Link href="/register" className="btn-primary">začít zdarma</Link>
           <a href="#jak" className="btn-secondary">jak to funguje</a>
         </div>
-        <div className="hero-visual">
+        <div
+          style={{
+            margin: '32px auto 0',
+            maxWidth: '320px',
+            width: '100%',
+            background: '#0e0e1a',
+            border: '0.5px solid rgba(130,110,255,0.15)',
+            borderRadius: '16px',
+            padding: '20px 16px',
+          }}
+        >
           <MiniGridDemo />
-          <div className="mini-stats">
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 'clamp(12px, 4vw, 20px)',
+              flexWrap: 'wrap',
+            }}
+          >
             <div className="ms"><div className="ms-val">3-back</div><div className="ms-lbl">aktuální úroveň</div></div>
             <div className="ms"><div className="ms-val">82%</div><div className="ms-lbl">přesnost</div></div>
             <div className="ms"><div className="ms-val">14 dní</div><div className="ms-lbl">streak</div></div>
