@@ -235,6 +235,21 @@ export default function DashboardClient({
                 </div>
 
                 <button type="button" className="play-btn" onClick={() => router.push('/game')}>▶ hrát dnes</button>
+                <a
+                  href="/api/user/export"
+                  download
+                  style={{
+                    fontSize: '12px',
+                    color: '#6b64a0',
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    marginTop: '8px',
+                  }}
+                >
+                  ↓ exportovat data (CSV)
+                </a>
                 {isAdmin && (
                   <a
                     href="/admin"

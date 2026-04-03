@@ -24,12 +24,16 @@ create table public.profiles (
 
 -- game sessions log
 create table public.game_sessions (
-  id         uuid primary key default gen_random_uuid(),
-  user_id    uuid references public.profiles(id) on delete cascade not null,
-  n_level    int not null,
-  score      int not null,   -- accuracy percentage 0-100
-  trials     int not null,
-  created_at timestamptz not null default now()
+  id                uuid primary key default gen_random_uuid(),
+  user_id           uuid references public.profiles(id) on delete cascade not null,
+  n_level           int not null,
+  score             int not null,   -- accuracy percentage 0-100
+  position_score    int,
+  audio_score       int,
+  duration_seconds  int,
+  played_at_hour    int,
+  trials            int not null,
+  created_at        timestamptz not null default now()
 );
 
 -- ── RLS ────────────────────────────────────────────────────

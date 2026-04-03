@@ -200,16 +200,34 @@ export default function Onboarding() {
 
   return (
     <div style={{
-      position: 'fixed', inset: 0, zIndex: 1000,
+      position: 'fixed',
+      inset: 0,
+      zIndex: 1000,
       background: 'rgba(8,8,15,0.97)',
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      padding: '32px 24px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      overflowY: 'auto',
+      padding: '32px 24px 40px',
       fontFamily: 'var(--font-geist-sans), system-ui, sans-serif',
     }}>
 
-      {/* Progress dots */}
-      <div style={{ display: 'flex', gap: '6px', marginBottom: '48px' }}>
+      {/* Progress dots - sticky at top */}
+      <div style={{
+        display: 'flex',
+        gap: '6px',
+        marginBottom: '32px',
+        marginTop: '16px',
+        position: 'sticky',
+        top: 0,
+        paddingTop: '8px',
+        paddingBottom: '8px',
+        background: 'rgba(8,8,15,0.97)',
+        width: '100%',
+        justifyContent: 'center',
+        zIndex: 10,
+      }}>
         {STEPS.map((_, i) => (
           <div key={i} style={{
             width: i === step ? '20px' : '6px',
@@ -221,7 +239,7 @@ export default function Onboarding() {
         ))}
       </div>
 
-      {/* Content */}
+      {/* Content + buttons below */}
       <div style={{ textAlign: 'center', maxWidth: '320px' }}>
         {current.emoji && (
           <div style={{ fontSize: '56px', marginBottom: '24px', lineHeight: 1 }}>
@@ -247,27 +265,41 @@ export default function Onboarding() {
         )}
       </div>
 
-      {/* Buttons */}
-      <div style={{ marginTop: '48px', width: '100%', maxWidth: '280px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{
+        marginTop: '32px',
+        width: '100%',
+        maxWidth: '280px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+        paddingBottom: '24px',
+      }}>
         <button type="button" onClick={next} style={{
-          width: '100%', padding: '14px',
-          background: '#6c5ce7', color: '#fff',
-          border: 'none', borderRadius: '10px',
-          fontSize: '15px', fontWeight: 500,
+          width: '100%',
+          padding: '14px',
+          background: '#6c5ce7',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '10px',
+          fontSize: '15px',
+          fontWeight: 500,
           cursor: 'pointer',
         }}>
           {step < STEPS.length - 1 ? 'další →' : 'začít trénovat'}
         </button>
-        {step < STEPS.length - 1 && (
-          <button type="button" onClick={skip} style={{
-            width: '100%', padding: '12px',
-            background: 'transparent', color: '#3d3860',
-            border: 'none', fontSize: '13px',
-            cursor: 'pointer',
-          }}>
-            přeskočit
-          </button>
-        )}
+
+        <button type="button" onClick={skip} style={{
+          width: '100%',
+          padding: '12px',
+          background: 'transparent',
+          color: '#6b64a0',
+          border: '0.5px solid rgba(130,110,255,0.2)',
+          borderRadius: '10px',
+          fontSize: '13px',
+          cursor: 'pointer',
+        }}>
+          přeskočit tutoriál
+        </button>
       </div>
 
     </div>

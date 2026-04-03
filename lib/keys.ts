@@ -5,7 +5,13 @@ import { Profile, MAX_KEYS, HIGH_SCORE_STREAK, LEVEL_UP_THRESHOLD } from '@/type
 export async function processGameResult(
   userId: string,
   nLevel: number,
-  scorePercent: number
+  scorePercent: number,
+  extra?: {
+    positionScore?: number
+    audioScore?: number
+    durationSeconds?: number
+    playedAtHour?: number
+  }
 ) {
   const supabase = await createClient()
 
@@ -71,6 +77,10 @@ export async function processGameResult(
     n_level: nLevel,
     score:   Math.round(scorePercent),
     trials:  nLevel + 20,
+    position_score:   extra?.positionScore ?? null,
+    audio_score:      extra?.audioScore ?? null,
+    duration_seconds: extra?.durationSeconds ?? null,
+    played_at_hour:   extra?.playedAtHour ?? null,
   })
 
   return {

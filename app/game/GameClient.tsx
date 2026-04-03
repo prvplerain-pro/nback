@@ -2,7 +2,7 @@
 import { useReducer, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { GameTrial, GamePhase } from '@/types'
-import { generateTrials, getMatches, calculateScoreBreakdown, speakLetter, preloadAudio } from '@/lib/game'
+import { generateTrials, getMatches, calculateScoreBreakdown, calculateSplitScore, speakLetter, preloadAudio } from '@/lib/game'
 
 function vibrate() {
   if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -41,8 +41,8 @@ interface State {
   pressedPos:   boolean   // whether position key pressed this trial
   pressedAudio: boolean   // whether audio key pressed this trial
   score:          number | null
-  scorePosition:  number | null
-  scoreAudio:     number | null
+  positionScore:  number | null
+  audioScore:     number | null
   suggestedN:   number | null
   newKeys:      number | null
   sessionsToday: number | null
@@ -57,7 +57,7 @@ type Action =
   | { type: 'PRESS_POSITION' }
   | { type: 'PRESS_AUDIO' }
   | { type: 'FINISH' }
-  | { type: 'SAVE_DONE';  suggestedN: number; newKeys: number; sessionsToday: number }
+  | { type: 'SAVE_DONE'; suggestedN: number; newKeys: number; sessionsToday: number; positionScore: number | null; audioScore: number | null }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -72,8 +72,8 @@ function reducer(state: State, action: Action): State {
         pressedPos:   false,
         pressedAudio: false,
         score:          null,
-        scorePosition:  null,
-        scoreAudio:     null,
+        positionScore:  null,
+        audioScore:     null,
         suggestedN:   null,
         newKeys:      null,
         sessionsToday: null,
@@ -116,8 +116,8 @@ function reducer(state: State, action: Action): State {
         ...state,
         phase: 'finished',
         score: overall,
-        scorePosition: position,
-        scoreAudio: audio,
+        positionScore: position,
+        audioScore: audio,
         saving: true,
       }
     }
@@ -128,6 +128,8 @@ function reducer(state: State, action: Action): State {
         suggestedN: action.suggestedN,
         newKeys: action.newKeys,
         sessionsToday: action.sessionsToday,
+        positionScore: action.positionScore,
+        audioScore: action.audioScore,
       }
     default:
       return state
@@ -137,17 +139,24 @@ function reducer(state: State, action: Action): State {
 const INIT: State = {
   phase: 'idle', nLevel: 1, trials: [], currentIndex: 0,
   responses: [], pressedPos: false, pressedAudio: false,
-  score: null, scorePosition: null, scoreAudio: null, suggestedN: null, newKeys: null, sessionsToday: null, saving: false,
+  score: null, positionScore: null, audioScore: null, suggestedN: null, newKeys: null, sessionsToday: null, saving: false,
 }
 
 // ── Component ──────────────────────────────────────────────
 export default function GameClient({ initialNLevel }: { initialNLevel: number }) {
   const router  = useRouter()
   const [state, dispatch] = useReducer(reducer, INIT)
+  const sessionStartRef = useRef<number>(Date.now())
 
   useEffect(() => {
     preloadAudio()
   }, [])
+
+  useEffect(() => {
+    if (state.phase === 'stimulus' && state.currentIndex === 0) {
+      sessionStartRef.current = Date.now()
+    }
+  }, [state.phase, state.currentIndex])
 
   const stateRef = useRef(state)
   stateRef.current = state
@@ -210,10 +219,25 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
   useEffect(() => {
     if (state.phase !== 'finished' || !state.saving || state.score === null) return
 
+    const { positionScore, audioScore } = calculateSplitScore(
+      state.trials,
+      state.nLevel,
+      state.responses
+    )
+    const durationSeconds = Math.round((Date.now() - sessionStartRef.current) / 1000)
+    const playedAtHour = new Date().getHours()
+
     fetch('/api/game/save', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ nLevel: state.nLevel, scorePercent: state.score }),
+      body:    JSON.stringify({
+        nLevel: state.nLevel,
+        scorePercent: state.score,
+        positionScore,
+        audioScore,
+        durationSeconds,
+        playedAtHour,
+      }),
     })
       .then(r => r.json())
       .then(d =>
@@ -222,9 +246,11 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
           suggestedN: d.suggestedN,
           newKeys: d.newKeys,
           sessionsToday: typeof d.sessionsToday === 'number' ? d.sessionsToday : 0,
+          positionScore,
+          audioScore,
         })
       )
-  }, [state.phase, state.saving, state.score, state.nLevel])
+  }, [state.phase, state.saving, state.score, state.nLevel, state.trials, state.responses])
 
   // Keyboard
   const handleKey = useCallback((e: KeyboardEvent) => {
@@ -303,16 +329,27 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
   // ── Render: finished ────────────────────────────────────
   if (state.phase === 'finished') {
     const score = state.score ?? 0
-    const posPct = state.scorePosition ?? 0
-    const audioPct = state.scoreAudio ?? 0
-    const pctColor = (p: number) =>
-      p >= 80 ? 'var(--success)' : p >= 60 ? 'var(--key-gold)' : 'var(--danger)'
     return (
       <Screen touchAction="manipulation">
         <h2 className="text-2xl font-bold">Session Complete</h2>
         <div className="text-7xl font-black" style={{ color: score >= 80 ? 'var(--success)' : score >= 60 ? 'var(--key-gold)' : 'var(--danger)' }}>
           {score}%
         </div>
+
+        {state.positionScore !== null && state.audioScore !== null && (
+          <div style={{ display: 'flex', gap: '16px', fontSize: '13px' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ color: '#a89aff', fontWeight: 500 }}>{state.positionScore}%</div>
+              <div style={{ color: '#3d3860', fontSize: '11px', marginTop: '2px' }}>pozice</div>
+            </div>
+            <div style={{ width: '0.5px', background: 'rgba(130,110,255,0.2)' }} />
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ color: '#a89aff', fontWeight: 500 }}>{state.audioScore}%</div>
+              <div style={{ color: '#3d3860', fontSize: '11px', marginTop: '2px' }}>písmeno</div>
+            </div>
+          </div>
+        )}
+
         <p className="text-white/50">N-{state.nLevel} · {totalTrials} trials</p>
 
         {state.sessionsToday !== null && (
@@ -341,21 +378,6 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
             )}
           </div>
         )}
-
-        <div
-          className="flex gap-8 justify-center text-center"
-          style={{ marginTop: '4px' }}
-        >
-          <div>
-            <div className="text-xs uppercase tracking-wide" style={{ color: 'var(--text3)', marginBottom: '4px' }}>obraz</div>
-            <div className="text-3xl font-bold tabular-nums" style={{ color: pctColor(posPct) }}>{posPct}%</div>
-          </div>
-          <div style={{ width: '1px', background: 'var(--border)', alignSelf: 'stretch' }} aria-hidden />
-          <div>
-            <div className="text-xs uppercase tracking-wide" style={{ color: 'var(--text3)', marginBottom: '4px' }}>zvuk</div>
-            <div className="text-3xl font-bold tabular-nums" style={{ color: pctColor(audioPct) }}>{audioPct}%</div>
-          </div>
-        </div>
 
         {state.saving ? (
           <p className="text-white/30 text-sm animate-pulse">Saving...</p>

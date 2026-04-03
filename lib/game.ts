@@ -75,6 +75,29 @@ export function calculateScore(
   return calculateScoreBreakdown(trials, nLevel, responses).overall
 }
 
+export function calculateSplitScore(
+  trials: GameTrial[],
+  nLevel: number,
+  responses: Array<{ position: boolean; audio: boolean }>
+): { positionScore: number; audioScore: number } {
+  let posCorrect = 0
+  let audioCorrect = 0
+  let total = 0
+
+  for (let i = nLevel; i < trials.length; i++) {
+    const { positionMatch, audioMatch } = getMatches(trials, i, nLevel)
+    const r = responses[i] ?? { position: false, audio: false }
+    if (r.position === positionMatch) posCorrect++
+    if (r.audio === audioMatch) audioCorrect++
+    total++
+  }
+
+  return {
+    positionScore: total > 0 ? Math.round((posCorrect / total) * 100) : 0,
+    audioScore:    total > 0 ? Math.round((audioCorrect / total) * 100) : 0,
+  }
+}
+
 // ── Adaptive level suggestion ──────────────────────────────
 export function nextNLevel(currentN: number, scorePercent: number): number {
   if (scorePercent >= 90) return currentN + 1

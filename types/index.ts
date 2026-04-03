@@ -33,6 +33,10 @@ export interface GameSession {
   user_id: string
   n_level: number
   score: number
+  position_score: number | null
+  audio_score: number | null
+  duration_seconds: number | null
+  played_at_hour: number | null
   trials: number
   created_at: string
 }
@@ -58,5 +62,7 @@ export interface GameState {
   responses: Array<{ position: boolean; audio: boolean }>
   phase: GamePhase
   score: number | null              // filled on 'finished'
+  positionScore: number | null
+  audioScore: number | null
   nextNLevel: number | null
 }
