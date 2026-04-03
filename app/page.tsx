@@ -17,8 +17,16 @@ export default function HomePage() {
         .nav-link:hover{color:var(--text)}
         .nav-cta{background:var(--purple);color:#fff;border:none;padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;transition:opacity .2s;text-decoration:none;display:inline-block;flex-shrink:0}
         .nav-cta:hover{opacity:.85}
-        .nav-links-desktop{display:flex;gap:20px}
-        @media (max-width:600px){.nav-links-desktop{display:none}}
+        .page-nav{display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:16px}
+        .nav-brand{grid-column:1}
+        .nav-links-desktop{display:flex;gap:clamp(10px,3vw,20px);justify-content:center;flex-wrap:wrap;grid-column:2}
+        .nav-cta-slot{grid-column:3;justify-self:end}
+        @media (max-width:640px){
+          .page-nav{grid-template-columns:1fr auto;row-gap:10px}
+          .nav-brand{grid-column:1;grid-row:1}
+          .nav-cta-slot{grid-column:2;grid-row:1}
+          .nav-links-desktop{grid-column:1/-1;grid-row:2;justify-content:center}
+        }
         .hero{text-align:center}
         .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(108,92,231,.1);border:0.5px solid rgba(108,92,231,.3);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--purple2);margin-bottom:24px;letter-spacing:.05em}
         .hero-dot{width:6px;height:6px;border-radius:50%;background:var(--purple);animation:pulse 2s infinite}
@@ -37,11 +45,11 @@ export default function HomePage() {
         .mc{aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,.04);border:0.5px solid var(--border);transition:all .4s}
         .mc.lit{background:var(--purple);border-color:#8b7fff}
         .mc.fading{background:rgba(108,92,231,.3);border-color:rgba(139,127,255,.4)}
-        .ms{text-align:center}
-        .ms-val{font-size:18px;font-weight:500;color:var(--purple2)}
-        .ms-lbl{font-size:11px;color:var(--text3);margin-top:2px}
+        .mini-stats{display:flex;justify-content:center;align-items:flex-start;gap:clamp(8px,3vw,20px);flex-wrap:nowrap;width:100%}
+        .ms{text-align:center;flex:1;min-width:0}
+        .ms-val{font-size:clamp(14px,4vw,18px);font-weight:500;color:var(--purple2)}
+        .ms-lbl{font-size:clamp(9px,2.4vw,11px);color:var(--text3);margin-top:2px}
         .feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:700px;margin:0 auto}
-        @media (max-width:480px){.feat-grid{grid-template-columns:1fr}}
         .feat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:18px 16px;transition:border-color .2s}
         .feat-card:hover{border-color:var(--border2)}
         .feat-icon{width:32px;height:32px;border-radius:8px;background:rgba(108,92,231,.15);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
@@ -51,11 +59,11 @@ export default function HomePage() {
         .social-proof{border-top:0.5px solid var(--border)}
         .sp-inner{max-width:600px;margin:0 auto}
         .sp-label{font-size:11px;color:var(--text3);letter-spacing:.08em;text-align:center;margin-bottom:16px;text-transform:uppercase}
-        .sp-grid{display:grid;grid-template-columns:1fr;gap:10px}
-        @media (min-width:600px){.sp-grid{grid-template-columns:repeat(3,1fr)}}
+        .sp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
         .sp-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px}
         .sp-quote{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
         .sp-name{font-size:11px;color:var(--text3)}
+        @media (max-width:600px){.sp-quote{font-size:11px}.sp-card{padding:10px 12px}}
         .page-nav{padding:12px 16px}
         @media (min-width:601px){.page-nav{padding:14px 20px}}
         .hero{padding:40px 16px 36px}
@@ -69,9 +77,6 @@ export default function HomePage() {
       <nav
         className="page-nav"
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
           borderBottom: '0.5px solid rgba(130,110,255,0.12)',
           background: '#08080f',
           position: 'sticky',
@@ -79,7 +84,7 @@ export default function HomePage() {
           zIndex: 100,
         }}
       >
-        <div style={{ fontSize: '14px', fontWeight: 500, color: '#a89aff', letterSpacing: '.06em' }}>
+        <div className="nav-brand" style={{ fontSize: '14px', fontWeight: 500, color: '#a89aff', letterSpacing: '.06em' }}>
           lock-i<span style={{ textTransform: 'uppercase' }}>N</span>
         </div>
 
@@ -89,7 +94,9 @@ export default function HomePage() {
           <a className="nav-link" href="/ceny">ceny</a>
         </div>
 
-        <a href="/register" className="nav-cta">začít zdarma</a>
+        <div className="nav-cta-slot">
+          <a href="/register" className="nav-cta">začít zdarma</a>
+        </div>
       </nav>
 
       <section className="hero">
@@ -112,14 +119,7 @@ export default function HomePage() {
           }}
         >
           <MiniGridDemo />
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              gap: 'clamp(12px, 4vw, 20px)',
-              flexWrap: 'wrap',
-            }}
-          >
+          <div className="mini-stats">
             <div className="ms"><div className="ms-val">3-back</div><div className="ms-lbl">aktuální úroveň</div></div>
             <div className="ms"><div className="ms-val">82%</div><div className="ms-lbl">přesnost</div></div>
             <div className="ms"><div className="ms-val">14 dní</div><div className="ms-lbl">streak</div></div>
