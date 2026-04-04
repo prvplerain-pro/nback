@@ -209,6 +209,21 @@ export default function SettingsClient({
           </form>
         </section>
 
+        {/* Export dat */}
+        <section className="space-y-3 pt-2 border-t border-white/10">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-white/35">Data</h2>
+          <p className="text-sm text-white/35">
+            Stáhnout historii sezení jako CSV (vhodné pro Excel).
+          </p>
+          <a
+            href="/api/user/export"
+            download
+            className="inline-flex items-center gap-1 text-sm text-[#6b64a0] hover:text-[#a89aff] transition-colors"
+          >
+            ↓ exportovat data (CSV)
+          </a>
+        </section>
+
         {/* Předplatné */}
         <section className="space-y-3 pt-2 border-t border-white/10">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-white/35">Předplatné</h2>
