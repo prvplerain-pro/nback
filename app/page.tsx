@@ -69,6 +69,17 @@ export default function HomePage() {
         }
         .nav-cta:hover{opacity:.94}
         .nav-cta:active{transform:scale(.97)}
+        .nav-cta--login{
+          background:rgba(130,110,255,0.1);
+          color:var(--purple2);
+          border:0.5px solid rgba(130,110,255,0.32);
+          box-shadow:none;
+          font-weight:600;
+        }
+        .nav-cta--login:hover{opacity:1;background:rgba(130,110,255,0.16);color:#d4ccff;border-color:rgba(168,154,255,0.45)}
+        @media (max-width:640px){
+          .nav-cta--login{box-shadow:none}
+        }
         .hero{text-align:center}
         .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(108,92,231,.1);border:0.5px solid rgba(108,92,231,.3);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--purple2);margin-bottom:24px;letter-spacing:.05em}
         .hero-dot{width:6px;height:6px;border-radius:50%;background:var(--purple);animation:pulse 2s infinite}
@@ -126,7 +137,7 @@ export default function HomePage() {
         </div>
 
         <div className="nav-cta-slot">
-          <Link href="/register" className="nav-cta">začít zdarma</Link>
+          <Link href="/login" className="nav-cta nav-cta--login">přihlásit se</Link>
         </div>
       </nav>
 

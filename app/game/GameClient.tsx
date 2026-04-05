@@ -2,7 +2,7 @@
 import { useReducer, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { GameTrial, GamePhase } from '@/types'
-import { generateTrials, getMatches, calculateScoreBreakdown, calculateSplitScore, speakLetter, preloadAudio } from '@/lib/game'
+import { generateTrials, getMatches, calculateScoreBreakdown, calculateSplitScore, speakLetter, preloadAudio, unlockAudio } from '@/lib/game'
 
 function vibrate() {
   if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -317,6 +317,7 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
         <button
           type="button"
           onPointerDown={() => {
+            unlockAudio()
             dispatch({ type: 'START', nLevel: initialNLevel })
           }}
           style={{ background: 'var(--purple)', color: '#fff', border: 'none', padding: '13px 40px', borderRadius: '10px', fontSize: '14px', fontWeight: 500, cursor: 'pointer', transition: 'all .2s', touchAction: 'manipulation' }}
@@ -402,6 +403,7 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
               <button
                 type="button"
                 onPointerDown={() => {
+                  unlockAudio()
                   dispatch({ type: 'START', nLevel: state.suggestedN ?? state.nLevel })
                 }}
                 className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 min-h-[48px]"

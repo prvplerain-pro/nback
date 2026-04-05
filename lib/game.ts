@@ -106,6 +106,9 @@ export function nextNLevel(currentN: number, scorePercent: number): number {
 }
 
 // ── Letter audio (public/audio/*.mp3) ───────────────────────
+const preloadCache: HTMLAudioElement[] = []
+let audioUnlocked = false
+
 export function speakLetter(letter: string) {
   if (typeof window === 'undefined') return
   const audio = new Audio(`/audio/${letter}.mp3`)
@@ -113,11 +116,21 @@ export function speakLetter(letter: string) {
 }
 
 export function preloadAudio() {
+  if (preloadCache.length > 0) return
   const letters = ['C', 'H', 'K', 'L', 'Q', 'R', 'S', 'T']
   letters.forEach(l => {
     const a = new Audio(`/audio/${l}.mp3`)
     a.preload = 'auto'
+    preloadCache.push(a)
   })
+}
+
+export function unlockAudio() {
+  if (audioUnlocked) return
+  audioUnlocked = true
+  const a = new Audio(`/audio/C.mp3`)
+  a.volume = 0.01
+  a.play().then(() => { a.pause() }).catch(() => {})
 }
 
 function randomFrom<T>(arr: T[]): T {
