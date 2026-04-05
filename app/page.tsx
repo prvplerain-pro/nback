@@ -13,20 +13,62 @@ export default function HomePage() {
           --border:rgba(130,110,255,0.12);--border2:rgba(130,110,255,0.25);
         }
         body{font-family:var(--font-geist-sans),system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
-        .nav-link{font-size:13px;color:var(--text2);cursor:pointer;transition:color .2s;text-decoration:none}
-        .nav-link:hover{color:var(--text)}
-        .nav-cta{background:var(--purple);color:#fff;border:none;padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;transition:opacity .2s;text-decoration:none;display:inline-block;flex-shrink:0}
-        .nav-cta:hover{opacity:.85}
-        .page-nav{display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:16px}
-        .nav-brand{grid-column:1}
-        .nav-links-desktop{display:flex;gap:clamp(10px,3vw,20px);justify-content:center;flex-wrap:wrap;grid-column:2}
-        .nav-cta-slot{grid-column:3;justify-self:end}
-        @media (max-width:640px){
-          .page-nav{grid-template-columns:1fr auto;row-gap:10px}
-          .nav-brand{grid-column:1;grid-row:1}
-          .nav-cta-slot{grid-column:2;grid-row:1}
-          .nav-links-desktop{grid-column:1/-1;grid-row:2;justify-content:center}
+        .page-nav{-webkit-tap-highlight-color:transparent}
+        .page-nav{
+          position:sticky;top:0;z-index:100;
+          display:flex;align-items:center;gap:10px;
+          min-height:52px;
+          padding:10px 16px;
+          padding-left:max(16px, env(safe-area-inset-left));
+          padding-right:max(16px, env(safe-area-inset-right));
+          padding-top:max(10px, env(safe-area-inset-top));
+          border-bottom:1px solid rgba(130,110,255,0.11);
+          background:rgba(8,8,15,0.82);
+          backdrop-filter:blur(18px) saturate(1.2);
+          -webkit-backdrop-filter:blur(18px) saturate(1.2);
+          box-shadow:0 1px 0 rgba(255,255,255,0.04) inset;
         }
+        @media (min-width:641px){
+          .page-nav{gap:18px;padding:14px 22px;padding-left:max(22px, env(safe-area-inset-left));padding-right:max(22px, env(safe-area-inset-right));padding-top:max(14px, env(safe-area-inset-top));min-height:56px}
+        }
+        .nav-brand{
+          flex-shrink:0;font-size:14px;font-weight:600;color:var(--purple2);letter-spacing:.08em;text-decoration:none;
+          line-height:1;padding:6px 0;
+        }
+        .nav-brand:hover{color:#c4b8ff}
+        .nav-links-desktop{
+          flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:clamp(14px,3vw,22px);
+        }
+        @media (max-width:640px){
+          .nav-links-desktop{
+            justify-content:flex-start;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+            scrollbar-width:none;gap:4px;margin:0 -6px;padding:2px 6px 8px;
+            mask-image:linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 14px), transparent);
+          }
+          .nav-links-desktop::-webkit-scrollbar{display:none}
+        }
+        .nav-link{
+          flex-shrink:0;font-size:13px;color:var(--text2);text-decoration:none;white-space:nowrap;
+          padding:8px 10px;border-radius:10px;transition:color .2s, background .15s;
+        }
+        @media (max-width:640px){
+          .nav-link{font-size:12px;color:rgba(184,172,232,.92);padding:8px 12px;border-radius:999px;background:rgba(130,110,255,0.06);border:0.5px solid rgba(130,110,255,0.1)}
+          .nav-link:active{background:rgba(130,110,255,0.14)}
+        }
+        .nav-link:hover{color:var(--text)}
+        .nav-cta-slot{flex-shrink:0}
+        .nav-cta{
+          background:linear-gradient(165deg,#8476f0 0%,var(--purple) 55%,#5a4fd4 100%);
+          color:#fff;border:none;padding:9px 17px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;
+          text-decoration:none;display:inline-block;white-space:nowrap;
+          box-shadow:0 2px 16px rgba(108,92,231,0.38),0 0 0 0.5px rgba(255,255,255,0.08) inset;
+          transition:opacity .2s, transform .12s, box-shadow .2s;
+        }
+        @media (max-width:640px){
+          .nav-cta{padding:10px 16px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.04em;box-shadow:0 3px 18px rgba(108,92,231,0.42)}
+        }
+        .nav-cta:hover{opacity:.94}
+        .nav-cta:active{transform:scale(.97)}
         .hero{text-align:center}
         .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(108,92,231,.1);border:0.5px solid rgba(108,92,231,.3);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--purple2);margin-bottom:24px;letter-spacing:.05em}
         .hero-dot{width:6px;height:6px;border-radius:50%;background:var(--purple);animation:pulse 2s infinite}
@@ -64,8 +106,6 @@ export default function HomePage() {
         .sp-quote{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
         .sp-name{font-size:11px;color:var(--text3)}
         @media (max-width:600px){.sp-quote{font-size:11px}.sp-card{padding:10px 12px}}
-        .page-nav{padding:12px 16px}
-        @media (min-width:601px){.page-nav{padding:14px 20px}}
         .hero{padding:40px 16px 36px}
         @media (min-width:601px){.hero{padding:60px 24px 48px}}
         .features{padding:32px 16px}
@@ -74,19 +114,10 @@ export default function HomePage() {
         @media (min-width:601px){.social-proof{padding:32px 24px}}
       `}</style>
 
-      <nav
-        className="page-nav"
-        style={{
-          borderBottom: '0.5px solid rgba(130,110,255,0.12)',
-          background: '#08080f',
-          position: 'sticky',
-          top: 0,
-          zIndex: 100,
-        }}
-      >
-        <div className="nav-brand" style={{ fontSize: '14px', fontWeight: 500, color: '#a89aff', letterSpacing: '.06em' }}>
-          lock-i<span style={{ textTransform: 'uppercase' }}>N</span>
-        </div>
+      <nav className="page-nav" aria-label="Hlavní navigace">
+        <Link href="/" className="nav-brand">
+          lock-i<span>N</span>
+        </Link>
 
         <div className="nav-links-desktop">
           <a className="nav-link" href="#jak">jak to funguje</a>
@@ -95,7 +126,7 @@ export default function HomePage() {
         </div>
 
         <div className="nav-cta-slot">
-          <a href="/register" className="nav-cta">začít zdarma</a>
+          <Link href="/register" className="nav-cta">začít zdarma</Link>
         </div>
       </nav>
 
