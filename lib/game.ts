@@ -106,22 +106,17 @@ export function nextNLevel(currentN: number, scorePercent: number): number {
 }
 
 // ── Letter audio (public/audio/*.mp3) ───────────────────────
-const audioCache: Record<string, HTMLAudioElement> = {}
-
 export function speakLetter(letter: string) {
   if (typeof window === 'undefined') return
-  if (!audioCache[letter]) {
-    audioCache[letter] = new Audio(`/audio/${letter}.mp3`)
-  }
-  const audio = audioCache[letter]
-  audio.currentTime = 0
+  const audio = new Audio(`/audio/${letter}.mp3`)
   audio.play().catch(() => {})
 }
 
 export function preloadAudio() {
   const letters = ['C', 'H', 'K', 'L', 'Q', 'R', 'S', 'T']
   letters.forEach(l => {
-    audioCache[l] = new Audio(`/audio/${l}.mp3`)
+    const a = new Audio(`/audio/${l}.mp3`)
+    a.preload = 'auto'
   })
 }
 
