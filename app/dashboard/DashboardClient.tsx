@@ -139,7 +139,13 @@ export default function DashboardClient({
         .li-start-main { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%; min-height:0; padding:12px 0 28px; box-sizing:border-box; }
         .li-stats { transform:translateY(100%); opacity:0; pointer-events:none; display:flex; flex-direction:column; }
         .li-stats.in { transform:translateY(0); opacity:1; pointer-events:auto; }
-        .li-nav { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:14px 20px; border-bottom:0.5px solid rgba(130,110,255,0.12); flex-shrink:0; }
+        .li-nav { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:14px 20px; border-bottom:0.5px solid rgba(130,110,255,0.12); flex-shrink:0; flex-wrap:wrap; row-gap:10px; }
+        @media (max-width:520px){
+          .li-nav { padding:12px 16px; padding-left:max(16px,env(safe-area-inset-left)); padding-right:max(16px,env(safe-area-inset-right)); }
+          .li-nav-actions { flex-wrap:wrap; justify-content:flex-end; gap:8px; max-width:100%; }
+          .li-nav-premium { font-size:11px; padding:4px 10px; }
+          .li-nav-link, .li-nav-out { font-size:11px; }
+        }
         .li-nav-mid { display:flex; align-items:center; gap:12px; min-width:0; flex:1; }
         .li-nav-actions { display:flex; align-items:center; gap:12px; flex-shrink:0; }
         .li-nav-link { font-size:12px; color:#8a82c0; text-decoration:none; cursor:pointer; background:none; border:none; padding:0; font-family:inherit; }
@@ -154,18 +160,20 @@ export default function DashboardClient({
         @keyframes flicker { 0%{opacity:1;transform:scale(1)} 100%{opacity:.8;transform:scale(1.12)} }
         .play-card { width:100%; align-self:stretch; background:#0e0e1a; border:0.5px solid rgba(130,110,255,0.2); border-left:none; border-right:none; border-radius:0; padding:22px 0; text-align:center; margin-bottom:16px; box-sizing:border-box; }
         .play-card-inner { max-width:300px; margin:0 auto; padding:0 20px; width:100%; box-sizing:border-box; }
-        .play-btn { width:100%; max-width:280px; padding:12px 14px; background:#6c5ce7; color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:500; cursor:pointer; transition:background .18s,transform .18s; }
+        .play-btn { width:100%; max-width:280px; min-height:48px; padding:12px 14px; background:#6c5ce7; color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:500; cursor:pointer; transition:background .18s,transform .18s; touch-action:manipulation; }
         .play-btn:hover { background:#7d6ef0; }
         .play-btn:active { transform:scale(.98); }
         .swipe-hint { display:flex; flex-direction:column; align-items:center; gap:6px; margin-top:16px; max-width:280px; margin-left:auto; margin-right:auto; padding:0 20px; cursor:pointer; user-select:none; }
         .swipe-arrow { width:28px; height:28px; border-radius:50%; border:0.5px solid rgba(130,110,255,0.25); display:flex; align-items:center; justify-content:center; animation:bounce 2s infinite; }
         @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
-        .stats-scroll { flex:1; overflow-y:auto; padding:16px 20px 24px; }
+        .stats-scroll { flex:1; overflow-y:auto; padding:16px 20px max(24px, calc(12px + env(safe-area-inset-bottom, 0px))); }
         .stats-scroll::-webkit-scrollbar { display:none; }
         .kpi-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-bottom:16px; }
+        @media (max-width:520px){ .kpi-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
         .kpi { background:#0e0e1a; border:0.5px solid rgba(130,110,255,0.12); border-radius:10px; padding:11px 10px; text-align:center; }
         .chart-card { background:#0e0e1a; border:0.5px solid rgba(130,110,255,0.12); border-radius:12px; padding:14px; margin-bottom:12px; }
         .two-col { display:grid; grid-template-columns:3fr 2fr; gap:10px; }
+        @media (max-width:560px){ .two-col { grid-template-columns:1fr; } }
         .inner-card { background:#0e0e1a; border:0.5px solid rgba(130,110,255,0.12); border-radius:12px; padding:12px; }
         .sl-item { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:0.5px solid rgba(130,110,255,0.12); }
         .sl-item:last-child { border-bottom:none; }

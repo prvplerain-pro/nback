@@ -309,6 +309,9 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
             <div>písmeno</div>
           </div>
         </div>
+        <p style={{ fontSize: '12px', color: 'var(--text3)', textAlign: 'center', maxWidth: '280px', lineHeight: 1.5, margin: '-8px 0 0' }}>
+          Na telefonu klepni na velká tlačítka dole — A a L platí hlavně pro klávesnici.
+        </p>
 
         {/* Start button */}
         <button
@@ -395,20 +398,20 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
                 {state.suggestedN > state.nLevel ? '⬆️' : '⬇️'} Next session: N-{state.suggestedN}
               </p>
             )}
-            <div className="flex gap-3 justify-center">
+            <div className="flex w-full max-w-sm mx-auto flex-col gap-3 sm:flex-row sm:justify-center">
               <button
                 type="button"
                 onPointerDown={() => {
                   dispatch({ type: 'START', nLevel: state.suggestedN ?? state.nLevel })
                 }}
-                className="px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105"
+                className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 min-h-[48px]"
                 style={{ background: 'var(--accent)', touchAction: 'manipulation' }}>
                 Play Again
               </button>
               <button
                 type="button"
                 onClick={() => router.push('/dashboard')}
-                className="px-6 py-3 rounded-xl font-semibold border border-white/20 hover:border-white/40 transition-all"
+                className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold border border-white/20 hover:border-white/40 transition-all min-h-[48px]"
                 style={{ touchAction: 'manipulation' }}>
                 Dashboard
               </button>

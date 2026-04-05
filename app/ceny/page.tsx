@@ -3,6 +3,7 @@ export default function CenyPage() {
     <>
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .ceny-shell{font-family:var(--font-geist-sans),system-ui,sans-serif;background:#08080f;color:#e8e6ff;min-height:100vh;box-sizing:border-box;padding:clamp(28px,6vw,48px) clamp(16px,4vw,24px);padding-left:max(clamp(16px,4vw,24px),env(safe-area-inset-left));padding-right:max(clamp(16px,4vw,24px),env(safe-area-inset-right));padding-bottom:max(clamp(28px,6vw,48px),env(safe-area-inset-bottom));}
         .plan-card{transition:border-color .2s;}
         .plan-card:hover{border-color:rgba(130,110,255,0.4);}
         .btn-primary{background:#6c5ce7;color:#fff;border:none;padding:12px 0;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;width:100%;transition:all .2s;}
@@ -11,7 +12,7 @@ export default function CenyPage() {
         .btn-secondary:hover{color:#e8e6ff;border-color:rgba(130,110,255,0.5);}
       `}} />
 
-      <div style={{fontFamily:'var(--font-geist-sans), system-ui, sans-serif', background:'#08080f', color:'#e8e6ff', minHeight:'100vh', padding:'48px 24px'}}>
+      <div className="ceny-shell">
         <div style={{maxWidth:'780px', margin:'0 auto'}}>
 
           {/* Back */}

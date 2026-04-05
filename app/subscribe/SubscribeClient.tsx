@@ -19,8 +19,23 @@ export default function SubscribeClient({ email }: { email: string }) {
     <>
       <style>{`
         @keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: 0.4 } }
+        .subscribe-shell {
+          font-family: var(--font-geist-sans), system-ui, sans-serif;
+          background: #08080f;
+          color: #e8e6ff;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: clamp(16px, 4vw, 24px);
+          padding-left: max(clamp(16px, 4vw, 24px), env(safe-area-inset-left));
+          padding-right: max(clamp(16px, 4vw, 24px), env(safe-area-inset-right));
+          padding-top: max(clamp(16px, 4vw, 24px), env(safe-area-inset-top));
+          padding-bottom: max(clamp(16px, 4vw, 24px), env(safe-area-inset-bottom));
+          box-sizing: border-box;
+        }
       `}</style>
-      <div style={{ fontFamily: 'var(--font-geist-sans), system-ui, sans-serif', background: '#08080f', color: '#e8e6ff', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+      <div className="subscribe-shell">
         <div style={{ width: '100%', maxWidth: '420px' }}>
 
           {/* Header */}

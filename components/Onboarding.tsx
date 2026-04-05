@@ -17,7 +17,7 @@ const STEPS = [
   {
     emoji: '📈',
     title: 'adaptivní obtížnost',
-    text: 'Začínáš na N=1. Při přesnosti ≥90 % jdeš na N+1, pod 70 % na N−1. Hra se přizpůsobuje tvému výkonu.',
+    text: 'Začínáš na N=1. Při přesnosti ≥90 % jdeš na N+1, pod 80 % na N−1. Hra se přizpůsobuje tvému výkonu.',
     demo: null,
   },
   {

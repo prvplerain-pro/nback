@@ -26,5 +26,11 @@ body {
   font-size: 14px;
 }
 
+/* Avoid accidental horizontal scroll on narrow viewports */
+html,
+body {
+  overflow-x: clip;
+}
+
 .flame-icon { filter: drop-shadow(0 0 8px rgba(251, 146, 60, 0.55)); }
 .flame-icon.empty { filter: grayscale(1) opacity(0.32); }

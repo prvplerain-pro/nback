@@ -101,8 +101,8 @@ export function calculateSplitScore(
 // ── Adaptive level suggestion ──────────────────────────────
 export function nextNLevel(currentN: number, scorePercent: number): number {
   if (scorePercent >= 90) return currentN + 1
-  if (scorePercent < 70) return Math.max(1, currentN - 1)
-  return currentN // 70–89 = stagnation
+  if (scorePercent < 80) return Math.max(1, currentN - 1)
+  return currentN // 80–89 = stagnation
 }
 
 // ── Letter audio (public/audio/*.mp3) ───────────────────────

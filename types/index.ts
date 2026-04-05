@@ -4,7 +4,7 @@ export type Json = string | number | boolean | null | { [key: string]: Json } | 
 export const MAX_KEYS          = 3
 export const HIGH_SCORE_STREAK = 3
 export const LEVEL_UP_THRESHOLD   = 90
-export const LEVEL_DOWN_THRESHOLD = 70
+export const LEVEL_DOWN_THRESHOLD = 80
 
 export interface Profile {
   id: string

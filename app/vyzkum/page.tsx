@@ -7,21 +7,14 @@ export default function VyzkumPage() {
         dangerouslySetInnerHTML={{
           __html: `
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .vyzkum-shell{font-family:var(--font-geist-sans),system-ui,sans-serif;background:#08080f;color:#e8e6ff;min-height:100vh;box-sizing:border-box;padding:clamp(28px,6vw,48px) clamp(16px,4vw,24px);padding-left:max(clamp(16px,4vw,24px),env(safe-area-inset-left));padding-right:max(clamp(16px,4vw,24px),env(safe-area-inset-right));padding-bottom:max(clamp(28px,6vw,48px),env(safe-area-inset-bottom));}
         .card{opacity:0;transform:translateY(28px);transition:opacity .55s ease, transform .55s ease;}
         .card.visible{opacity:1;transform:translateY(0);}
       `,
         }}
       />
 
-      <div
-        style={{
-          fontFamily: 'var(--font-geist-sans), system-ui, sans-serif',
-          background: '#08080f',
-          color: '#e8e6ff',
-          minHeight: '100vh',
-          padding: '48px 24px',
-        }}
-      >
+      <div className="vyzkum-shell">
         <div style={{ maxWidth: '720px', margin: '0 auto' }}>
           <a
             href="/"

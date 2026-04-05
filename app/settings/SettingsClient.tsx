@@ -112,10 +112,20 @@ export default function SettingsClient({
   }
 
   const fieldClass =
-    'w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-[#e8e6ff] placeholder:text-white/25 outline-none focus:border-white/25 transition-colors'
+    'w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-base text-[#e8e6ff] placeholder:text-white/25 outline-none focus:border-white/25 transition-colors min-h-[48px]'
 
   return (
-    <main className="min-h-screen px-4 py-10 pb-16" style={{ background: '#08080f', color: '#e8e6ff' }}>
+    <main
+      className="min-h-screen py-10 pb-16"
+      style={{
+        background: '#08080f',
+        color: '#e8e6ff',
+        paddingLeft: 'max(16px, env(safe-area-inset-left))',
+        paddingRight: 'max(16px, env(safe-area-inset-right))',
+        paddingTop: 'max(40px, env(safe-area-inset-top))',
+        paddingBottom: 'max(64px, env(safe-area-inset-bottom))',
+      }}
+    >
       <div className="max-w-md mx-auto space-y-8">
         <div className="flex items-center justify-between gap-4">
           <h1 className="text-2xl font-semibold">Nastavení</h1>
@@ -167,7 +177,7 @@ export default function SettingsClient({
             <button
               type="submit"
               disabled={savingProfile}
-              className="w-full py-3 rounded-xl font-medium text-sm disabled:opacity-50 transition-opacity"
+              className="w-full min-h-[48px] py-3 rounded-xl font-medium text-base disabled:opacity-50 transition-opacity touch-manipulation"
               style={{ background: 'var(--accent)' }}
             >
               {savingProfile ? 'Ukládám…' : 'Uložit údaje'}
@@ -199,7 +209,7 @@ export default function SettingsClient({
             <button
               type="submit"
               disabled={savingPw}
-              className="w-full py-3 rounded-xl font-medium text-sm border border-white/15 text-white/85 hover:bg-white/5 disabled:opacity-50 transition-colors"
+              className="w-full min-h-[48px] py-3 rounded-xl font-medium text-base border border-white/15 text-white/85 hover:bg-white/5 disabled:opacity-50 transition-colors touch-manipulation"
             >
               {savingPw ? 'Ukládám…' : 'Změnit heslo'}
             </button>
@@ -248,14 +258,14 @@ export default function SettingsClient({
               type="button"
               onClick={openBillingPortal}
               disabled={portalLoading}
-              className="w-full py-3 rounded-xl font-medium text-sm border border-white/15 text-white/85 hover:bg-white/5 disabled:opacity-50"
+              className="w-full min-h-[48px] py-3 rounded-xl font-medium text-base border border-white/15 text-white/85 hover:bg-white/5 disabled:opacity-50 touch-manipulation"
             >
               {portalLoading ? 'Otevírám…' : 'Spravovat předplatné'}
             </button>
           ) : (
             <Link
               href="/subscribe"
-              className="block w-full py-3 rounded-xl font-medium text-sm text-center"
+              className="flex w-full min-h-[48px] items-center justify-center rounded-xl font-medium text-base touch-manipulation"
               style={{ background: 'var(--accent)' }}
             >
               Předplatit

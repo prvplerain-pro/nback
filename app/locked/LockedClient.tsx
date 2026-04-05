@@ -33,8 +33,9 @@ export default function LockedClient({ profile }: { profile: Profile }) {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          padding: 24px 20px;
+          padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
           gap: 0;
+          box-sizing: border-box;
         }
         .li-locked-inner {
           width: 100%;
