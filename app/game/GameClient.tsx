@@ -462,12 +462,8 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
           {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(pos => {
             const isCenter = pos === 4
             const isActive = isStimulus && trial?.position === pos && !isCenter
-            const isFeedbackPos = state.phase === 'feedback' && trial?.position === pos && !isCenter
 
-            let borderColor = 'rgba(255,255,255,0.08)'
-            if (isFeedbackPos) {
-              borderColor = matches?.positionMatch ? 'var(--success)' : 'var(--danger)'
-            }
+            const borderColor = 'rgba(255,255,255,0.08)'
 
             return (
               <div
