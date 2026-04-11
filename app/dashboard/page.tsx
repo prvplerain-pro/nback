@@ -103,6 +103,7 @@ export default async function DashboardPage() {
 
   return (
     <DashboardClient
+      keys={profile.keys ?? 0}
       subscriptionStatus={profile.subscription_status ?? null}
       isAdmin={profile.is_admin ?? false}
       highScore={highScoreN}

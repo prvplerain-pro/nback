@@ -389,7 +389,7 @@ export default function GameClient({
 
         <p className="text-white/50">N-{state.nLevel} · {totalTrials} trials</p>
 
-        {state.sessionsToday !== null && (
+        {!isRecovery && state.sessionsToday !== null && (
           <div style={{ width: '100%', maxWidth: '320px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text3)', marginBottom: '8px' }}>
               <span>dnešní sezení</span>
@@ -444,7 +444,7 @@ export default function GameClient({
                   : `${state.newConsecutive ?? 0}/3 sezení splněno — pokračuj`}
               </div>
             )}
-            {state.suggestedN !== null && state.suggestedN !== state.nLevel && (
+            {!isRecovery && state.suggestedN !== null && state.suggestedN !== state.nLevel && (
               <p className="text-sm" style={{ color: 'var(--accent)' }}>
                 {state.suggestedN > state.nLevel ? '⬆️' : '⬇️'} Next session: N-{state.suggestedN}
               </p>

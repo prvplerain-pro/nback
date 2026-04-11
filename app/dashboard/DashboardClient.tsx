@@ -16,6 +16,7 @@ type Session = {
 }
 
 type Props = {
+  keys: number
   subscriptionStatus: string | null
   isAdmin: boolean
   highScore: number
@@ -30,6 +31,7 @@ type Props = {
 }
 
 export default function DashboardClient({
+  keys,
   subscriptionStatus,
   isAdmin,
   highScore,
@@ -242,7 +244,13 @@ export default function DashboardClient({
                   <MidnightCountdown />
                 </div>
 
-                <button type="button" className="play-btn" onClick={() => router.push('/game')}>▶ hrát dnes</button>
+                <button
+                  type="button"
+                  className="play-btn"
+                  onClick={() => router.push(keys === 0 ? '/recovery' : '/game')}
+                >
+                  {keys === 0 ? '▶ recovery sezení' : '▶ hrát dnes'}
+                </button>
                 {isAdmin && (
                   <a
                     href="/admin"

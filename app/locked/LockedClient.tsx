@@ -244,7 +244,7 @@ export default function LockedClient({ profile }: { profile: Profile }) {
               ))}
             </div>
             <div className="li-progress-label">{streak} / {needed} dokončeno</div>
-            <button className="li-btn-primary" onClick={() => router.push('/game')}>
+            <button className="li-btn-primary" onClick={() => router.push('/recovery')}>
               ▶ zkusit recovery hru
             </button>
           </div>
