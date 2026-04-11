@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Profile } from '@/types'
 
@@ -8,8 +8,12 @@ const HIGH_SCORE_STREAK = 3
 export default function LockedClient({ profile }: { profile: Profile }) {
   const router = useRouter()
   const [copied, setCopied] = useState(false)
+  const refPath = `/register?ref=${profile.referral_code ?? ''}`
+  const [referralUrl, setReferralUrl] = useState(refPath)
 
-  const referralUrl = `${window.location.origin}/register?ref=${profile.referral_code}`
+  useEffect(() => {
+    setReferralUrl(`${window.location.origin}${refPath}`)
+  }, [refPath])
 
   async function copyLink() {
     await navigator.clipboard.writeText(referralUrl)

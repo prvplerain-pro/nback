@@ -45,6 +45,7 @@ interface State {
   audioScore:     number | null
   suggestedN:   number | null
   newKeys:      number | null
+  newConsecutive: number | null
   sessionsToday: number | null
   saving:       boolean
 }
@@ -57,7 +58,7 @@ type Action =
   | { type: 'PRESS_POSITION' }
   | { type: 'PRESS_AUDIO' }
   | { type: 'FINISH' }
-  | { type: 'SAVE_DONE'; suggestedN: number; newKeys: number; sessionsToday: number; positionScore: number | null; audioScore: number | null }
+  | { type: 'SAVE_DONE'; suggestedN: number; newKeys: number; newConsecutive: number; sessionsToday: number; positionScore: number | null; audioScore: number | null }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -76,6 +77,7 @@ function reducer(state: State, action: Action): State {
         audioScore:     null,
         suggestedN:   null,
         newKeys:      null,
+        newConsecutive: null,
         sessionsToday: null,
         saving:       false,
       }
@@ -127,6 +129,7 @@ function reducer(state: State, action: Action): State {
         saving: false,
         suggestedN: action.suggestedN,
         newKeys: action.newKeys,
+        newConsecutive: action.newConsecutive,
         sessionsToday: action.sessionsToday,
         positionScore: action.positionScore,
         audioScore: action.audioScore,
@@ -139,11 +142,21 @@ function reducer(state: State, action: Action): State {
 const INIT: State = {
   phase: 'idle', nLevel: 1, trials: [], currentIndex: 0,
   responses: [], pressedPos: false, pressedAudio: false,
-  score: null, positionScore: null, audioScore: null, suggestedN: null, newKeys: null, sessionsToday: null, saving: false,
+  score: null, positionScore: null, audioScore: null, suggestedN: null, newKeys: null, newConsecutive: null, sessionsToday: null, saving: false,
 }
 
 // ── Component ──────────────────────────────────────────────
-export default function GameClient({ initialNLevel }: { initialNLevel: number }) {
+interface GameClientProps {
+  initialNLevel: number
+  isRecovery?: boolean
+  consecutiveHighScores?: number
+}
+
+export default function GameClient({
+  initialNLevel,
+  isRecovery = false,
+  consecutiveHighScores,
+}: GameClientProps) {
   const router  = useRouter()
   const [state, dispatch] = useReducer(reducer, INIT)
   const sessionStartRef = useRef<number>(Date.now())
@@ -245,6 +258,7 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
           type: 'SAVE_DONE',
           suggestedN: d.suggestedN,
           newKeys: d.newKeys,
+          newConsecutive: typeof d.newConsecutive === 'number' ? d.newConsecutive : 0,
           sessionsToday: typeof d.sessionsToday === 'number' ? d.sessionsToday : 0,
           positionScore,
           audioScore,
@@ -286,6 +300,25 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
           </div>
           <div style={{ fontSize: '13px', color: 'var(--text3)', marginTop: '6px' }}>{totalTrialsCount} pokusů</div>
         </div>
+
+        {isRecovery && (
+          <div style={{
+            fontSize: '13px',
+            color: '#a89aff',
+            background: 'rgba(108,92,231,0.1)',
+            border: '0.5px solid rgba(108,92,231,0.3)',
+            borderRadius: '10px',
+            padding: '10px 16px',
+            textAlign: 'center',
+            maxWidth: '280px',
+          }}>
+            recovery mód · {consecutiveHighScores ?? 0}/3 sezení
+            <br />
+            <span style={{ fontSize: '11px', color: '#6b64a0' }}>
+              překonej N-{initialNLevel} s ≥90 % přesností
+            </span>
+          </div>
+        )}
 
         {/* Mini grid preview - static 3x3 */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '6px', width: '120px' }}>
@@ -387,11 +420,28 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
           <p className="text-white/30 text-sm animate-pulse">Saving...</p>
         ) : (
           <div className="space-y-3 text-center">
-            {state.newKeys !== null && (
+            {!isRecovery && state.newKeys !== null && (
               <div className="flex gap-2 justify-center">
                 {Array.from({ length: 3 }).map((_, i) => (
                   <span key={i} className={`text-2xl ${i < (state.newKeys ?? 0) ? 'flame-icon' : 'flame-icon empty'}`}>🔥</span>
                 ))}
+              </div>
+            )}
+            {isRecovery && state.newKeys !== null && (
+              <div style={{
+                fontSize: '13px',
+                color: state.newKeys > 0 ? '#4ade80' : '#8a82c0',
+                background: state.newKeys > 0 ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.04)',
+                border: `0.5px solid ${state.newKeys > 0 ? 'rgba(74,222,128,0.3)' : 'rgba(130,110,255,0.15)'}`,
+                borderRadius: '10px',
+                padding: '12px 16px',
+                textAlign: 'center',
+                maxWidth: '280px',
+                margin: '0 auto',
+              }}>
+                {state.newKeys > 0
+                  ? '🗝️ Klíč získán! Přístup obnoven.'
+                  : `${state.newConsecutive ?? 0}/3 sezení splněno — pokračuj`}
               </div>
             )}
             {state.suggestedN !== null && state.suggestedN !== state.nLevel && (
@@ -400,23 +450,35 @@ export default function GameClient({ initialNLevel }: { initialNLevel: number })
               </p>
             )}
             <div className="flex w-full max-w-sm mx-auto flex-col gap-3 sm:flex-row sm:justify-center">
-              <button
-                type="button"
-                onPointerDown={() => {
-                  unlockAudio()
-                  dispatch({ type: 'START', nLevel: state.suggestedN ?? state.nLevel })
-                }}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 min-h-[48px]"
-                style={{ background: 'var(--accent)', touchAction: 'manipulation' }}>
-                Play Again
-              </button>
-              <button
-                type="button"
-                onClick={() => router.push('/dashboard')}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold border border-white/20 hover:border-white/40 transition-all min-h-[48px]"
-                style={{ touchAction: 'manipulation' }}>
-                Dashboard
-              </button>
+              {!(isRecovery && state.newKeys !== null && state.newKeys > 0) && (
+                <button
+                  type="button"
+                  onPointerDown={() => {
+                    unlockAudio()
+                    dispatch({ type: 'START', nLevel: state.suggestedN ?? state.nLevel })
+                  }}
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 min-h-[48px]"
+                  style={{ background: 'var(--accent)', touchAction: 'manipulation' }}>
+                  Play Again
+                </button>
+              )}
+              {isRecovery && state.newKeys !== null && state.newKeys > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => router.push('/dashboard')}
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 min-h-[48px]"
+                  style={{ background: 'var(--accent)', touchAction: 'manipulation' }}>
+                  Dashboard
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => router.push('/dashboard')}
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold border border-white/20 hover:border-white/40 transition-all min-h-[48px]"
+                  style={{ touchAction: 'manipulation' }}>
+                  Dashboard
+                </button>
+              )}
             </div>
           </div>
         )}

@@ -21,12 +21,18 @@ export default async function GamePage() {
   ])
 
   if (!profile) redirect('/login')
-  if (profile.keys === 0) redirect('/locked')
 
   // Stejná adaptivní logika jako po sezení: ≥90 % → +1 N, <80 % → −1 N, jinak stejné N
-  const initialNLevel = lastSession
+  const adaptiveN = lastSession
     ? nextNLevel(lastSession.n_level, lastSession.score)
     : profile.high_score
+  const initialNLevel = profile.keys === 0 ? profile.high_score : adaptiveN
 
-  return <GameClient initialNLevel={initialNLevel} />
+  return (
+    <GameClient
+      initialNLevel={initialNLevel}
+      isRecovery={profile.keys === 0}
+      consecutiveHighScores={profile.consecutive_high_scores}
+    />
+  )
 }
