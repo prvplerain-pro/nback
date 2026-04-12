@@ -32,7 +32,9 @@ export async function processGameResult(
   const dailyGoalReached = newSessionsToday >= 14
 
   // Nejvyšší N, na kterém uživatel kdy dokončil sezení (nezávisle na %)
-  const newHighScore = Math.max(profile.high_score, nLevel)
+  // Během locku (keys === 0) high_score nezvyšuj — recovery nesmí „levelovat“ nad N z před locku
+  const newHighScore =
+    profile.keys === 0 ? profile.high_score : Math.max(profile.high_score, nLevel)
 
   // Streak klíčů: stále jen při silné hře (≥90 %) — porovnáváme proti N před tímto sezením
   const beatsHighScore   = nLevel > profile.high_score && scorePercent >= LEVEL_UP_THRESHOLD

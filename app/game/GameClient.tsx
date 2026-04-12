@@ -464,7 +464,10 @@ export default function GameClient({
                   type="button"
                   onPointerDown={() => {
                     unlockAudio()
-                    dispatch({ type: 'START', nLevel: state.suggestedN ?? state.nLevel })
+                    dispatch({
+                      type: 'START',
+                      nLevel: isRecovery ? initialNLevel : (state.suggestedN ?? state.nLevel),
+                    })
                   }}
                   className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 min-h-[48px]"
                   style={{ background: 'var(--accent)', touchAction: 'manipulation' }}>
