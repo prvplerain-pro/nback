@@ -17,6 +17,7 @@ type Session = {
 
 type Props = {
   keys: number
+  recoveryForfeited: boolean
   subscriptionStatus: string | null
   isAdmin: boolean
   highScore: number
@@ -32,6 +33,7 @@ type Props = {
 
 export default function DashboardClient({
   keys,
+  recoveryForfeited,
   subscriptionStatus,
   isAdmin,
   highScore,
@@ -247,9 +249,14 @@ export default function DashboardClient({
                 <button
                   type="button"
                   className="play-btn"
-                  onClick={() => router.push(keys === 0 ? '/recovery' : '/game')}
+                  onClick={() => {
+                    if (keys === 0) router.push(recoveryForfeited ? '/locked' : '/recovery')
+                    else router.push('/game')
+                  }}
                 >
-                  {keys === 0 ? '▶ recovery sezení' : '▶ hrát dnes'}
+                  {keys === 0
+                    ? (recoveryForfeited ? 'odemčení (sdílení / předplatné) →' : '▶ recovery sezení')
+                    : '▶ hrát dnes'}
                 </button>
                 {isAdmin && (
                   <a

@@ -21,7 +21,9 @@ export default async function GamePage() {
   ])
 
   if (!profile) redirect('/login')
-  if (profile.keys === 0) redirect('/recovery')
+  if (profile.keys === 0) {
+    redirect(profile.recovery_forfeited ? '/locked' : '/recovery')
+  }
 
   // Stejná adaptivní logika jako po sezení: ≥90 % → +1 N, <80 % → −1 N, jinak stejné N
   const initialNLevel = lastSession

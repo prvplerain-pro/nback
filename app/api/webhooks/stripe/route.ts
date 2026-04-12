@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
           stripe_customer_id:     session.customer as string,
           stripe_subscription_id: session.subscription as string,
           keys: 3,
+          recovery_forfeited: false,
         })
         .eq('id', userId)
 

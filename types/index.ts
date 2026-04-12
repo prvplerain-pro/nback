@@ -14,6 +14,7 @@ export interface Profile {
   keys: number                      // 0–3
   high_score: number                // highest N at which a session was completed (always max historical N)
   consecutive_high_scores: number   // streak toward key recovery
+  recovery_forfeited?: boolean     // keys===0: one failed recovery session → no more /recovery until keys>0
   last_played_at: string | null
   streak_days: number
   sessions_today: number

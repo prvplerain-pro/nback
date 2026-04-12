@@ -37,6 +37,7 @@ export async function processGameResult(
   // Streak klíčů: stále jen při silné hře (≥90 %) — porovnáváme proti N před tímto sezením
   const beatsHighScore   = nLevel > profile.high_score && scorePercent >= LEVEL_UP_THRESHOLD
   const matchesHighScore = nLevel >= profile.high_score && scorePercent >= LEVEL_UP_THRESHOLD
+  const recoveryPass     = beatsHighScore || matchesHighScore
 
   let newConsecutive = profile.consecutive_high_scores
   let newKeys        = profile.keys
@@ -55,6 +56,14 @@ export async function processGameResult(
     newConsecutive = 0
   }
 
+  let recoveryForfeited = profile.recovery_forfeited ?? false
+  if (profile.keys === 0) {
+    if (!recoveryPass) recoveryForfeited = true
+  } else {
+    recoveryForfeited = false
+  }
+  if (newKeys > 0) recoveryForfeited = false
+
   const newStreak = wasPlayedYesterday(profile.last_played_at)
     ? profile.streak_days + 1
     : 1
@@ -65,6 +74,7 @@ export async function processGameResult(
       high_score:              newHighScore,
       consecutive_high_scores: newConsecutive,
       keys:                    newKeys,
+      recovery_forfeited:      recoveryForfeited,
       last_played_at:          new Date().toISOString(),
       streak_days:             newStreak,
       sessions_today:          newSessionsToday,
@@ -90,6 +100,7 @@ export async function processGameResult(
     newStreak,
     newSessionsToday,
     dailyGoalReached,
+    recoveryForfeited,
   }
 }
 
@@ -107,11 +118,13 @@ export async function applyReferralBonus(
     .single<Profile>()
 
   if (referrer && !referrer.referral_bonus_given) {
+    const newRefKeys = Math.min(MAX_KEYS, referrer.keys + 1)
     await supabase
       .from('profiles')
       .update({
-        keys: Math.min(MAX_KEYS, referrer.keys + 1),
+        keys: newRefKeys,
         referral_bonus_given: true,
+        ...(referrer.keys === 0 ? { recovery_forfeited: false } : {}),
       })
       .eq('id', referrerId)
   }

@@ -12,7 +12,7 @@ export default async function DashboardPage() {
   const [{ data: profile }, { data: sessions }] = await Promise.all([
     supabase
       .from('profiles')
-      .select('high_score, streak_days, last_played_at, keys, first_name, last_name, sessions_today, subscription_status, is_admin')
+      .select('high_score, streak_days, last_played_at, keys, recovery_forfeited, first_name, last_name, sessions_today, subscription_status, is_admin')
       .eq('id', user.id)
       .single(),
     supabase
@@ -104,6 +104,7 @@ export default async function DashboardPage() {
   return (
     <DashboardClient
       keys={profile.keys ?? 0}
+      recoveryForfeited={profile.recovery_forfeited ?? false}
       subscriptionStatus={profile.subscription_status ?? null}
       isAdmin={profile.is_admin ?? false}
       highScore={highScoreN}

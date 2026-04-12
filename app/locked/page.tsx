@@ -17,5 +17,5 @@ export default async function LockedPage() {
   if (!profile)           redirect('/login')
   if (profile.keys > 0)  redirect('/game')
 
-  return <LockedClient profile={profile} />
+  return <LockedClient profile={profile} recoveryForfeited={profile.recovery_forfeited ?? false} />
 }

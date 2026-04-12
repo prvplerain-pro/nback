@@ -16,6 +16,7 @@ export default async function RecoveryPage() {
 
   if (!profile) redirect('/login')
   if (profile.keys > 0) redirect('/game')
+  if (profile.recovery_forfeited) redirect('/locked')
 
   return (
     <GameClient

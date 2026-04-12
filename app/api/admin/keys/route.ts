@@ -46,7 +46,13 @@ export async function POST(req: NextRequest) {
     newKeys = Math.min(3, Math.max(0, targetProfile.keys + (delta ?? 0)))
   }
 
-  await db.from('profiles').update({ keys: newKeys }).eq('id', userId)
+  await db
+    .from('profiles')
+    .update({
+      keys: newKeys,
+      ...(newKeys > 0 ? { recovery_forfeited: false } : {}),
+    })
+    .eq('id', userId)
 
   return NextResponse.json({ newKeys })
 }

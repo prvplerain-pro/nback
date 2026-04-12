@@ -5,7 +5,13 @@ import { Profile } from '@/types'
 
 const HIGH_SCORE_STREAK = 3
 
-export default function LockedClient({ profile }: { profile: Profile }) {
+export default function LockedClient({
+  profile,
+  recoveryForfeited,
+}: {
+  profile: Profile
+  recoveryForfeited: boolean
+}) {
   const router = useRouter()
   const [copied, setCopied] = useState(false)
   const refPath = `/register?ref=${profile.referral_code ?? ''}`
@@ -228,36 +234,52 @@ export default function LockedClient({ profile }: { profile: Profile }) {
             </div>
           </div>
 
-          {/* Option 1 */}
-          <div className="li-card">
-            <div className="li-card-title">možnost 1 — dokaž se</div>
-            <div className="li-card-desc">
-              Překonej svůj rekord (N-{highScore}) s přesností ≥80 % celkem {needed}× za sebou.
-            </div>
-            <div className="li-progress">
-              {Array.from({ length: needed }).map((_, i) => (
-                <div
-                  key={i}
-                  className="li-progress-bar"
-                  style={{ background: i < streak ? '#6c5ce7' : 'rgba(255,255,255,0.08)' }}
-                />
-              ))}
-            </div>
-            <div className="li-progress-label">{streak} / {needed} dokončeno</div>
-            <button className="li-btn-primary" onClick={() => router.push('/recovery')}>
-              ▶ zkusit recovery hru
-            </button>
-          </div>
+          {!recoveryForfeited && (
+            <>
+              <div className="li-card">
+                <div className="li-card-title">možnost 1 — jedna šance</div>
+                <div className="li-card-desc">
+                  Jedno sezení na N-{highScore} s ≥90 % přesností počítá do streaku. Jakmile sezení nesplníš, další recovery už ne — jen sdílení nebo předplatné.
+                </div>
+                <div className="li-progress">
+                  {Array.from({ length: needed }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="li-progress-bar"
+                      style={{ background: i < streak ? '#6c5ce7' : 'rgba(255,255,255,0.08)' }}
+                    />
+                  ))}
+                </div>
+                <div className="li-progress-label">{streak} / {needed} dokončeno</div>
+                <button className="li-btn-primary" onClick={() => router.push('/recovery')}>
+                  ▶ zkusit recovery hru
+                </button>
+              </div>
 
-          <div className="li-divider">
-            <div className="li-divider-line" />
-            <div className="li-divider-text">nebo</div>
-            <div className="li-divider-line" />
-          </div>
+              <div className="li-divider">
+                <div className="li-divider-line" />
+                <div className="li-divider-text">nebo</div>
+                <div className="li-divider-line" />
+              </div>
+            </>
+          )}
 
-          {/* Option 2 */}
+          {recoveryForfeited && (
+            <div
+              style={{
+                fontSize: '12px',
+                color: '#6b64a0',
+                textAlign: 'center',
+                lineHeight: 1.55,
+                padding: '0 8px 8px',
+              }}
+            >
+              Zkušební recovery už není k dispozici. Níže můžeš pozvat přítele nebo obnovit předplatné.
+            </div>
+          )}
+
           <div className="li-card">
-            <div className="li-card-title">možnost 2 — pozvi přítele</div>
+            <div className="li-card-title">{recoveryForfeited ? 'možnost 1 — pozvi přítele' : 'možnost 2 — pozvi přítele'}</div>
             <div className="li-card-desc">
               Sdílej odkaz. Když se kamarád přihlásí a předplatí, oba dostanete +1 život.
             </div>

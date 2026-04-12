@@ -46,6 +46,7 @@ interface State {
   suggestedN:   number | null
   newKeys:      number | null
   newConsecutive: number | null
+  recoveryForfeited: boolean | null
   sessionsToday: number | null
   saving:       boolean
 }
@@ -58,7 +59,7 @@ type Action =
   | { type: 'PRESS_POSITION' }
   | { type: 'PRESS_AUDIO' }
   | { type: 'FINISH' }
-  | { type: 'SAVE_DONE'; suggestedN: number; newKeys: number; newConsecutive: number; sessionsToday: number; positionScore: number | null; audioScore: number | null }
+  | { type: 'SAVE_DONE'; suggestedN: number; newKeys: number; newConsecutive: number; recoveryForfeited: boolean; sessionsToday: number; positionScore: number | null; audioScore: number | null }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -78,6 +79,7 @@ function reducer(state: State, action: Action): State {
         suggestedN:   null,
         newKeys:      null,
         newConsecutive: null,
+        recoveryForfeited: null,
         sessionsToday: null,
         saving:       false,
       }
@@ -130,6 +132,7 @@ function reducer(state: State, action: Action): State {
         suggestedN: action.suggestedN,
         newKeys: action.newKeys,
         newConsecutive: action.newConsecutive,
+        recoveryForfeited: action.recoveryForfeited,
         sessionsToday: action.sessionsToday,
         positionScore: action.positionScore,
         audioScore: action.audioScore,
@@ -142,7 +145,7 @@ function reducer(state: State, action: Action): State {
 const INIT: State = {
   phase: 'idle', nLevel: 1, trials: [], currentIndex: 0,
   responses: [], pressedPos: false, pressedAudio: false,
-  score: null, positionScore: null, audioScore: null, suggestedN: null, newKeys: null, newConsecutive: null, sessionsToday: null, saving: false,
+  score: null, positionScore: null, audioScore: null, suggestedN: null, newKeys: null, newConsecutive: null, recoveryForfeited: null, sessionsToday: null, saving: false,
 }
 
 // ── Component ──────────────────────────────────────────────
@@ -259,6 +262,7 @@ export default function GameClient({
           suggestedN: d.suggestedN,
           newKeys: d.newKeys,
           newConsecutive: typeof d.newConsecutive === 'number' ? d.newConsecutive : 0,
+          recoveryForfeited: d.recoveryForfeited === true,
           sessionsToday: typeof d.sessionsToday === 'number' ? d.sessionsToday : 0,
           positionScore,
           audioScore,
@@ -315,7 +319,7 @@ export default function GameClient({
             recovery mód · {consecutiveHighScores ?? 0}/3 sezení
             <br />
             <span style={{ fontSize: '11px', color: '#6b64a0' }}>
-              překonej N-{initialNLevel} s ≥90 % přesností
+              překonej N-{initialNLevel} s ≥90 % přesností — jedno neúspěšné sezení recovery navždy uzavře
             </span>
           </div>
         )}
@@ -430,9 +434,9 @@ export default function GameClient({
             {isRecovery && state.newKeys !== null && (
               <div style={{
                 fontSize: '13px',
-                color: state.newKeys > 0 ? '#4ade80' : '#8a82c0',
-                background: state.newKeys > 0 ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.04)',
-                border: `0.5px solid ${state.newKeys > 0 ? 'rgba(74,222,128,0.3)' : 'rgba(130,110,255,0.15)'}`,
+                color: state.recoveryForfeited ? '#f87171' : state.newKeys > 0 ? '#4ade80' : '#8a82c0',
+                background: state.recoveryForfeited ? 'rgba(248,113,113,0.08)' : state.newKeys > 0 ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.04)',
+                border: `0.5px solid ${state.recoveryForfeited ? 'rgba(248,113,113,0.25)' : state.newKeys > 0 ? 'rgba(74,222,128,0.3)' : 'rgba(130,110,255,0.15)'}`,
                 borderRadius: '10px',
                 padding: '12px 16px',
                 textAlign: 'center',
@@ -441,7 +445,9 @@ export default function GameClient({
               }}>
                 {state.newKeys > 0
                   ? '🗝️ Klíč získán! Přístup obnoven.'
-                  : `${state.newConsecutive ?? 0}/3 sezení splněno — pokračuj`}
+                  : state.recoveryForfeited
+                    ? 'Recovery už není — další hra není. Pokračuj sdílením nebo předplatným.'
+                    : `${state.newConsecutive ?? 0}/3 sezení splněno — pokračuj`}
               </div>
             )}
             {!isRecovery && state.suggestedN !== null && state.suggestedN !== state.nLevel && (
@@ -450,7 +456,10 @@ export default function GameClient({
               </p>
             )}
             <div className="flex w-full max-w-sm mx-auto flex-col gap-3 sm:flex-row sm:justify-center">
-              {!(isRecovery && state.newKeys !== null && state.newKeys > 0) && (
+              {!(
+                (isRecovery && state.newKeys !== null && state.newKeys > 0)
+                || (isRecovery && state.recoveryForfeited)
+              ) && (
                 <button
                   type="button"
                   onPointerDown={() => {
@@ -470,6 +479,23 @@ export default function GameClient({
                   style={{ background: 'var(--accent)', touchAction: 'manipulation' }}>
                   Dashboard
                 </button>
+              ) : isRecovery && state.recoveryForfeited ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => router.push('/locked')}
+                    className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 min-h-[48px]"
+                    style={{ background: 'var(--accent)', touchAction: 'manipulation' }}>
+                    Možnosti odemčení →
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => router.push('/dashboard')}
+                    className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold border border-white/20 hover:border-white/40 transition-all min-h-[48px]"
+                    style={{ touchAction: 'manipulation' }}>
+                    Dashboard
+                  </button>
+                </>
               ) : (
                 <button
                   type="button"
